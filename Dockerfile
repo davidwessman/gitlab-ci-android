@@ -1,12 +1,16 @@
 #
-# GitLab CI: Android v0.2
+# GitLab CI: Android v0.1
 #
+# https://github.com/davidwessman/gitlab-ci-android
+# https://hub.docker.com/r/davidwessman/gitlab-ci-android/
+#
+# Based on:
 # https://hub.docker.com/r/jangrewe/gitlab-ci-android/
 # https://git.faked.org/jan/gitlab-ci-android
 #
 
 FROM ubuntu:17.04
-MAINTAINER Jan Grewe <jan@faked.org>
+MAINTAINER David Wessman <david@wessman.co>
 
 ENV VERSION_SDK_TOOLS "3859397"
 
@@ -27,6 +31,7 @@ RUN apt-get -qq update && \
       lib32ncurses5 \
       lib32z1 \
       unzip \
+      wget \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN rm -f /etc/ssl/certs/java/cacerts; \
@@ -43,7 +48,7 @@ RUN mkdir -p $ANDROID_HOME/licenses/ \
 ADD packages.txt /sdk
 RUN mkdir -p /root/.android && \
   touch /root/.android/repositories.cfg && \
-  ${ANDROID_HOME}/tools/bin/sdkmanager --update 
+  ${ANDROID_HOME}/tools/bin/sdkmanager --update
 
 RUN while read -r package; do PACKAGES="${PACKAGES}${package} "; done < /sdk/packages.txt && \
     ${ANDROID_HOME}/tools/bin/sdkmanager ${PACKAGES}
